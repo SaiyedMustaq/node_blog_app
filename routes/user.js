@@ -9,13 +9,21 @@ router.get("/signup", (req, res) => {
   return res.render("signup");
 });
 
-router.post("/signup",async (req, res) => {
-    const { fullName, emial, password } = req.body;
-    await User.create({
-        fullName,
-        emial,
-        password
-    })
+router.post("/signin", (req, res) => {
+  const { email, password } = req.body;
+  const user = User.matchPassword(email, password);
+  console.log(`SING IN SUCCESS FULLY ${user}`);
+  return res.redirect("/");
+});
+
+router.post("/signup", async (req, res) => {
+  const { fullName, email, password } = req.body;
+  var data = await User.create({
+    fullName,
+    email,
+    password,
+  });
+  console.log(`User Data ${data}`);
   return res.redirect("/");
 });
 
