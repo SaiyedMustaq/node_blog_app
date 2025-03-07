@@ -1,5 +1,6 @@
 const { Router } = require("express");
-const User = require("../models/user");
+const User = require("../models/user_model");
+
 const router = Router();
 
 router.get("/signin", (req, res) => {
@@ -9,11 +10,21 @@ router.get("/signup", (req, res) => {
   return res.render("signup");
 });
 
-router.post("/signin", (req, res) => {
-  const { email, password } = req.body;
-  const user = User.matchPassword(email, password);
-  console.log(`SING IN SUCCESS FULLY ${user}`);
-  return res.redirect("/");
+router.post("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const token = await User.matchPasswordAndGenerateTokenForUser(
+      email,
+      password
+    );
+    return res.cookie("token", token).redirect("/");
+  } catch (error) {
+    return res.render(
+      'signin', {
+        error:"Incorrect email or password"
+      }
+    );
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -26,5 +37,9 @@ router.post("/signup", async (req, res) => {
   console.log(`User Data ${data}`);
   return res.redirect("/");
 });
+
+router.get("/logout", (req, res) => {
+  return res.clearCookie("token").redirect("/");
+}); 
 
 module.exports = router;

@@ -6,7 +6,24 @@
 </head>
 <body>
     <%- include('./partials/nav') %>
-    <%- include('./partials/scripts') %>
+    <div class="container mt-3">
+        <div class="row">
+          <% blogs.forEach(element => { %>
+            <div class="col-md-4 col-lg-2 mb-4 d-flex align-items-stretch"> <!-- Adjust the columns for 5 per row -->
+              <div class="card" style="width: 18rem;">
+                <img src="<%= element.image %>" class="card-img-top" alt="..." style="height: 200px; object-fit: cover;"> <!-- Set the height and width for the image -->
+                <div class="card-body">
+                  <h5 class="card-title"><%= element.title %></h5>
+                  <p class="card-text"><%= element.description %></p>
+                  <a href="/blog/<%= element._id %>" class="btn btn-primary">View</a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+      
+    <%- include('./partials/scripts') %> 
 </script>
 </body>
 </html>
